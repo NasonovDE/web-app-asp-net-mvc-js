@@ -33,10 +33,18 @@ namespace KinoAfisha.Controllers
         [HttpPost]
         public ActionResult Create(Film model)
         {
+            var db = new KinoAfishaContext();
+            if (!ModelState.IsValid)
+            {
+                var films = db.Films.ToList();
+                ViewBag.Create = model;
+                return View("Index", films);
+
+            }
             if (!ModelState.IsValid)
                 return View(model);
    
-            var db = new KinoAfishaContext();
+           
 
             if (model.FormatIds != null && model.FormatIds.Any())
             {
@@ -62,13 +70,7 @@ namespace KinoAfisha.Controllers
             if (model.Key != _key)
                 ModelState.AddModelError("Key", "Ключ для создания/изменения записи указан не верно");
             
-            if (!ModelState.IsValid)
-            {
-                var films = db.Films.ToList();
-                ViewBag.Create = model;
-                return View("Index", films);
-
-            }
+            
 
 
             db.Films.Add(model);
@@ -108,6 +110,13 @@ namespace KinoAfisha.Controllers
         {
             var db = new KinoAfishaContext();
             var film = db.Films.FirstOrDefault(x => x.Id == model.Id);
+            if (!ModelState.IsValid)
+            {
+                var films = db.Films.ToList();
+                ViewBag.Create = model;
+                return View("Index", films);
+
+            }
             if (film == null)
                 ModelState.AddModelError("Id", "Фильм не найден");
 
@@ -119,13 +128,7 @@ namespace KinoAfisha.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            if (!ModelState.IsValid)
-            {
-                var films = db.Films.ToList();
-                ViewBag.Create = model;
-                return View("Index", films);
-
-            }
+       
             MappingFilm(model, film, db);
 
             db.Entry(film).State = EntityState.Modified;

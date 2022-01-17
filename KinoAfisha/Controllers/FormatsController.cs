@@ -77,18 +77,21 @@ namespace KinoAfisha.Controllers
         public ActionResult Edit(Format model)
         {
             var db = new KinoAfishaContext();
+           
+            if (!ModelState.IsValid)
+            {
+                var formats = db.Formats.ToList();
+                ViewBag.Create = model;
+                return View("Index", formats);
+            }
             var format = db.Formats.FirstOrDefault(x => x.Id == model.Id);
+
             if (format == null)
                 ModelState.AddModelError("Id", "Формат не найден");
 
             if (!ModelState.IsValid)
                 return View(model);
-            if (!ModelState.IsValid)
-            {
-                var formats = db.Formats.ToList();
-                ViewBag.Create = model;
-                return View("Index", format);
-            }
+            
 
             MappingNationality(model, format);
 

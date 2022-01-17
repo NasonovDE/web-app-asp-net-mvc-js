@@ -78,11 +78,6 @@ namespace KinoAfisha.Controllers
         {
             var db = new KinoAfishaContext();
             var cinema = db.Cinemas.FirstOrDefault(x => x.Id == model.Id);
-            if (cinema == null)
-                ModelState.AddModelError("Id", "Кинотеатр не найден");
-
-            if (!ModelState.IsValid)
-                return View(model);
 
             if (!ModelState.IsValid)
             {
@@ -90,6 +85,13 @@ namespace KinoAfisha.Controllers
                 ViewBag.Create = model;
                 return View("Index", cinemas);
             }
+            if (cinema == null)
+                ModelState.AddModelError("Id", "Кинотеатр не найден");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+          
             MappingFilm(model, cinema, db);
 
             db.Entry(cinema).State = EntityState.Modified;

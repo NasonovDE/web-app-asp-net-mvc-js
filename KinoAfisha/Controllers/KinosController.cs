@@ -31,10 +31,19 @@ namespace KinoAfisha.Controllers
         [HttpPost]
         public ActionResult Create(Kino model)
         {
+            var db = new KinoAfishaContext();
+            if (!ModelState.IsValid)
+            {
+                var kinos = db.Kinos.ToList();
+                ViewBag.Create = model;
+                return View("Index", kinos);
+
+            }
+
             if (!ModelState.IsValid)
                 return View(model);
 
-            var db = new KinoAfishaContext();
+ 
             model.CreateAt = DateTime.Now;
             model.NextArrivalDate = DateTime.Now;
             if (model.FilmIds != null && model.FilmIds.Any())
@@ -48,13 +57,7 @@ namespace KinoAfisha.Controllers
                 model.Cinemas = cinema;
             }
 
-            if (!ModelState.IsValid)
-            {
-                var kinos = db.Kinos.ToList();
-                ViewBag.Create = model;
-                return View("Index", kinos);
-
-            }
+       
 
 
             db.Kinos.Add(model);
@@ -95,14 +98,7 @@ namespace KinoAfisha.Controllers
         {
 
             var db = new KinoAfishaContext();
-            var kino = db.Kinos.FirstOrDefault(x => x.Id == model.Id);
 
-            
-
-            if (kino == null)
-            {
-                ModelState.AddModelError("Id", "кино не найдено");
-            }
             if (!ModelState.IsValid)
             {
                 var kinos = db.Kinos.ToList();
@@ -110,6 +106,15 @@ namespace KinoAfisha.Controllers
                 return View("Index", kinos);
 
             }
+
+            var kino = db.Kinos.FirstOrDefault(x => x.Id == model.Id);
+
+            
+            if (kino == null)
+            {
+                ModelState.AddModelError("Id", "кино не найдено");
+            }
+           
             if (!ModelState.IsValid)
                 return View(model);
             
