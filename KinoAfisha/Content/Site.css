@@ -1,10 +1,10 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-    background-image: url("Images/background.jpg");
-    background-attachment: fixed;
+    background: linear-gradient(45deg, #1541D9, #550A6B);
     background-size: cover;
     background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 
